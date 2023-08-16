@@ -1,7 +1,5 @@
 import React from 'react'
-// import { supabase } from '../../db/supabase'
-
-// console.log(supabase)
+import { supabase } from '../../lib/supabase'
 
 export default function AsdfTest(){
   return(
