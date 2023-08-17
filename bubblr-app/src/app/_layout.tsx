@@ -1,20 +1,34 @@
 import { Stack } from "expo-router";
-import { AuthContextProvider } from '../context/auth-context'
+import { AuthContextProvider } from '../context/auth-context';
+import { ThemeContextProvider, useThemeContext } from "../context/theme-context";
+import { ThemeProvider } from '@rneui/themed';
 
 export default function Layout(){
-  return (
+
+  function _Inner(){
+    const {theme} = useThemeContext();
+    return (
+      <ThemeProvider theme={theme}>
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#111111',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+      </ThemeProvider>
+    )
+  }
+
+  return(
     <AuthContextProvider>
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
-      />
+      <ThemeContextProvider>
+        <_Inner/>
+      </ThemeContextProvider>
     </AuthContextProvider>
   )
 }

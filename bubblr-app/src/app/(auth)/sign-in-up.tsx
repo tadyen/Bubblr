@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View, Text } from 'react-native'
-import { Button, Input } from 'react-native-elements'
+import { StyleSheet, View, Alert } from 'react-native'
+import { Button, Input, Text, Icon } from '@rneui/themed'
 import { supabase } from '../../lib/supabase'
-import { sign } from 'crypto'
 
 export default function SignInUp(){
   const [email, setEmail] = useState('')
@@ -52,23 +51,23 @@ export default function SignInUp(){
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
-          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          leftIcon={<Icon type='font-awesome' name='envelope'/>}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
-        />
+          />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
-          label="Password"
-          leftIcon={{ type: 'font-awesome', name: 'lock' }}
+          label={"Password"}
+          leftIcon={<Icon type='font-awesome' name='lock' />}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
-        />
+          />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button title="Login" disabled={loading} onPress={() => signInWithEmail()} />

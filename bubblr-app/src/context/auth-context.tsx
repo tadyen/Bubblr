@@ -1,13 +1,14 @@
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { AuthSession } from "@supabase/supabase-js";
-import { useState, useEffect, createContext, useMemo, ReactNode } from "react"
+import { useState, useEffect, createContext, useMemo, ReactNode, useContext } from "react"
 import { supabase } from "../lib/supabase";
 import { LogBox, Platform } from "react-native";
 import { router, useSegments } from 'expo-router';
 
 export type Session = AuthSession | null | undefined;
+type AuthContextType = { session: Session }
 
-export const AuthContext = createContext<Session>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // The default provider style requires value to be specified each use as opposed to an on-load
 // A custom provider here fixes that
@@ -22,6 +23,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }){
 
   // hook to retrieve session
   useEffect(()=>{
+    console.log("useefect auth");
     (async ()=>{
       const {data, error} = await supabase.auth.getSession()
       const fetchedSession = data.session
@@ -54,6 +56,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }){
   // hook to protect route access based on user authentication
   const segments = useSegments();
   useEffect(()=>{
+    console.log("useefect auth segments");
     // allow only routes in /app/(auth)/*
     const inAuthGroup = segments[0] === '(auth)';
     if( !session && !inAuthGroup ){
@@ -64,12 +67,21 @@ export function AuthContextProvider({ children }: { children: ReactNode }){
   },[session, segments])
 
   const value = useMemo(()=>{
-    return session
-  },[session])
+    console.log("usememo auth");
+    return {session}
+  },[session]);
 
   return (
     <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuthContext(){
+  const context = useContext(AuthContext);
+  if(context === undefined){
+    throw new Error("useAuthContext must be used within AuthContextProvider.")
+  }
+  return context
 }

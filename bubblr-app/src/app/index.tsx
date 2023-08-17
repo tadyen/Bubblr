@@ -1,44 +1,43 @@
 import 'react-native-url-polyfill/auto'
 import { useState, useEffect, useContext } from 'react'
+import { StyleSheet, View } from 'react-native';
+import { Stack } from 'expo-router'
+import { Text } from '@rneui/themed';
+import { useAuthContext } from '../context/auth-context'
+import { useThemeContext } from '../context/theme-context'
 import { supabase } from '../lib/supabase'
-import { StyleSheet, Text, View, Button } from 'react-native'
-import { AuthContext } from '../context/auth-context'
-import { Sign } from 'crypto'
+import SignOut from "../components/SignOut";
+import DarkModeSwitch from '../components/DarkModeSwitch'
+import ThemedView from '../components/ThemedView';
 
 export default function App() {
-  const session = useContext(AuthContext);
+  const session = useAuthContext()?.session;
+  const {themeMode} = useThemeContext();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "Home",
+        }}
+        />
       <Text>Root route working!</Text>
       { session &&
         <>
         <Text>Logged in as {session?.user?.email}</Text>
         <SignOut/>
+        <DarkModeSwitch/>
         </>
       }
-    </View>
-  )
-}
-
-function SignOut(){
-  return(
-    <View style={styles.verticallySpaced}>
-      <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-    </View>
+      <Text>Dark enabled: { themeMode === "dark" ? 'true' : 'false'}</Text>
+    </ThemedView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
-  },
+  }
 });

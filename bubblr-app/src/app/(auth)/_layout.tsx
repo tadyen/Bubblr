@@ -1,19 +1,19 @@
 import 'react-native-url-polyfill/auto'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Slot } from 'expo-router'
+import ThemedView from '../../components/ThemedView';
 
 export default function Layout() {
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <Slot/>
-    </View>
+    </ThemedView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
