@@ -1,18 +1,16 @@
-// big help from:
-// https://github.com/intagaming/expo-todo/blob/f0ec63c75cc1769f63db7f4ee8094d74039b00c6/src/state/auth-context.tsx
-
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { AuthSession } from "@supabase/supabase-js";
-import { useState, useEffect, createContext, ReactNode } from "react"
+import { useState, useEffect, createContext, useMemo, ReactNode } from "react"
 import { supabase } from "../lib/supabase";
 import { LogBox, Platform } from "react-native";
+import { router, useSegments } from 'expo-router';
 
-export type AuthContextType = AuthSession | null | undefined;
+export type Session = AuthSession | null | undefined;
 
-export const AuthContext = createContext<AuthContextType>(undefined);
+export const AuthContext = createContext<Session>(undefined);
 
-// The default provider style requires value to be specified each use
-// as opposed to an on-load
+// The default provider style requires value to be specified each use as opposed to an on-load
+// A custom provider here fixes that
 export function AuthContextProvider({ children }: { children: ReactNode }){
   /**
    * Session state types:
@@ -20,8 +18,9 @@ export function AuthContextProvider({ children }: { children: ReactNode }){
    * - null: The session is fetched and is unavailable.
    * - AuthSession: There is a session.
    */
-  const [ session, setSession ] = useState<AuthContextType>(undefined);
+  const [ session, setSession ] = useState<Session>(undefined);
 
+  // hook to retrieve session
   useEffect(()=>{
     (async ()=>{
       const {data, error} = await supabase.auth.getSession()
@@ -40,22 +39,36 @@ export function AuthContextProvider({ children }: { children: ReactNode }){
         )
       }
     })()
-
     // update session with listener
     const {data: authListener} = supabase.auth.onAuthStateChange(
       async (_event, newSession)=>{
         setSession(newSession);
       }
     );
-
     // disconnect listener
     return ()=>{
       authListener?.subscription.unsubscribe();
     };
   },[]);
 
+  // hook to protect route access based on user authentication
+  const segments = useSegments();
+  useEffect(()=>{
+    // allow only routes in /app/(auth)/*
+    const inAuthGroup = segments[0] === '(auth)';
+    if( !session && !inAuthGroup ){
+      router.replace('/sign-in-up');
+    }else if ( session !== null && inAuthGroup ){
+      router.replace('/');
+    }
+  },[session, segments])
+
+  const value = useMemo(()=>{
+    return session
+  },[session])
+
   return (
-    <AuthContext.Provider value={session}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

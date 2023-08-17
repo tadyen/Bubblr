@@ -1,37 +1,54 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View, Text } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../../lib/supabase'
+import { sign } from 'crypto'
 
-export default function Auth() {
+export default function SignInUp(){
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   async function signInWithEmail() {
     setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     })
-
-    if (error) Alert.alert(error.message)
+    if (error){
+      Alert.alert(error.message);
+      isErrorTimeout();
+    }
     setLoading(false)
   }
 
   async function signUpWithEmail() {
     setLoading(true)
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
     })
-
-    if (error) Alert.alert(error.message)
+    if(error){
+      Alert.alert(error.message);
+      isErrorTimeout();
+    }
     setLoading(false)
+  }
+
+  async function isErrorTimeout(){
+    if(!isError){
+      setIsError(true);
+      setTimeout(()=>{
+        setIsError(false);
+      }, 2000);
+    }
   }
 
   return (
     <View style={styles.container}>
+      <Text>Please Login or Sign-Up to continue</Text>
+      <Text style={styles.errorMsg}>{ isError && "Invalid input combination"}</Text>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
@@ -54,7 +71,7 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button title="Login" disabled={loading} onPress={() => signInWithEmail()} />
       </View>
       <View style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
@@ -76,4 +93,7 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
+  errorMsg: {
+    color: 'red',
+  }
 })
