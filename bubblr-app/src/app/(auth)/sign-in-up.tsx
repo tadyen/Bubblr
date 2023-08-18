@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input, Text, Icon } from '@rneui/themed'
+import ThemedView from '../../components/themed-common/ThemedView'
 import { supabase } from '../../lib/supabase'
 
 export default function SignInUp(){
@@ -45,7 +46,7 @@ export default function SignInUp(){
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <Text>Please Login or Sign-Up to continue</Text>
       <Text style={styles.errorMsg}>{ isError && "Invalid input combination"}</Text>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -75,7 +76,7 @@ export default function SignInUp(){
       <View style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
       </View>
-    </View>
+    </ThemedView>
   )
 }
 

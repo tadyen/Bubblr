@@ -18,7 +18,6 @@ export default function App() {
           title: "Home",
         }}
       />
-      <Text>Root route working!</Text>
       <BubbleChart />
     </ThemedView>
   )
@@ -28,17 +27,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: 'stretch',
-    alignSelf: 'stretch',
     alignItems: 'stretch',
     justifyContent: 'center',
-  },
-  canvas: {
-    flex: 1,
-    border: "solid 1px green",
-  },
-  chartArea: {
-    padding: 0,
-    border: "solid 1px yellow"
   }
 });

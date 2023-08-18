@@ -1,57 +1,130 @@
 import { useEffect, useRef, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import Highcharts from "highcharts";
 import HighchartsMore from "highcharts/highcharts-more";
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsLightTheme from "highcharts/themes/grid";
 import HighchartsDarkTheme from "highcharts/themes/grid-light";
 import { useThemeContext } from "../context/theme-context";
+import BubbleButtons from "./BubbleOptions";
 
-console.log("HIGHCHARTS file load");
 // module init
-if (typeof Highcharts === 'object') {
-  console.log("HIGHCHARTS init");
+if (typeof Highcharts === 'object'){
   HighchartsMore(Highcharts);
 }
 
+export default function BubbleChart(props: HighchartsReact.Props){
+  const {themeMode} = useThemeContext();
+  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const [ chartOptions, setChartOptions] = useState(defaultChartOptions);
+  const [ height, setHeight ] = useState<number>();
+
+  useEffect(()=>{
+    console.log("useEffect bubble chart theme init");
+    HighchartsDarkTheme(Highcharts);
+  },[])
+
+  useEffect(()=>{
+    console.log("useEffect bubble chart theme");
+    themeMode === "dark" ? HighchartsDarkTheme(Highcharts) : HighchartsLightTheme(Highcharts);
+  },[themeMode])
+
+  useEffect(()=>{
+    console.log("useEffect bubbleChart update options");
+    setChartOptions((prev)=>{
+      return{...prev,
+        chart: {
+          height: height,
+        }
+      }
+    })
+  },[height])
+
+
+  return(
+    <View style={styles.canvas} onLayout={(layout)=>{
+      const { height } = layout.nativeEvent.layout
+      setHeight(height);
+    }}>
+      <Pressable
+        onLongPress={(e)=>{
+          console.log("long press")
+          console.log(e)
+        }}
+      >
+        <View style={styles.chartArea}>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={chartOptions}
+            ref={chartComponentRef}
+            {...props}
+            />
+        </View>
+      </Pressable>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  canvas: {
+    flex: 1,
+    // border: "solid 1px green",
+  },
+  chartArea: {
+    padding: 0,
+    // border: "solid 1px yellow"
+  },
+  bubbleButtons: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+  }
+});
+
 const dummyBubbles = [
   {
-    name: "A0",
+    name: "Ignorable",
     data: [
-      {name: 'aa0', value: 1},
-      {name: 'aa1', value: 4},
-      {name: 'aa2', value: 8},
+      {name: 'Stay alive', value: 1**2},
+      {name: 'aa1', value: 4**2},
+      {name: 'aa2', value: 8**2},
+      {name: 'aa3', value: 10**2},
     ]
   },
   {
-    name: "A1",
+    name: "Low",
     data: [
-      {name: 'asdf1', value: 12},
-      {name: 'asdf2', value: 12},
-      {name: 'asdf3', value: 15},
-      {name: 'asdf4', value: 16},
+      {name: 'asdf1', value: 11**2},
+      {name: 'asdf2', value: 12**2},
+      {name: 'asdf2', value: 12**2},
+      {name: 'asdf3', value: 15**2},
+      {name: 'asdf4', value: 16**2},
+      {name: 'asdf4', value: 20**2},
     ]
   },
   {
-    name: "A2",
+    name: "Average",
     data: [
-      {name: 'asdf5', value: 20},
-      {name: 'asdf6', value: 21},
+      {name: 'asdf5', value: 20**2},
+      {name: 'asdf6', value: 21**2},
+      {name: 'asdf6', value: 29**2},
+      {name: 'asdf6', value: 30**2},
     ]
   },
   {
-    name: "A3",
+    name: "High",
     data: [
-      {name: 'asdf7', value: 30},
-      {name: 'asdf8', value: 35},
+      {name: 'Have a break', value: 30**2},
+      {name: 'Have a KitKat', value: 35**2},
+      {name: 'Chill out and relax', value: 40**2},
     ]
   },
   {
-    name: "A4",
+    name: "Super",
     data: [
-      {name: 'asdf9', value: 50},
-      {name: 'asdf10', value: 40},
-      {name: 'asdf11', value: 45},
+      {name: 'Finish off the asignment', value: 40**2},
+      {name: 'Touch Grass', value: 45**2},
+      {name: 'Take the dog out for a walk', value: 50**2},
     ]
   }
 ] as Highcharts.Options["series"];
@@ -72,10 +145,15 @@ const defaultChartOptions: Highcharts.Options = {
   },
   tooltip: {
     useHTML: true,
-    pointFormat: '<b>{point.name}:</b> {point.value}',
+    pointFormat: '{point.name}',
+    style: {
+      color: 'black',
+      fontSize: '50px',
+    }
   },
   plotOptions: {
     packedbubble: {
+      minSize: '40%',
       useSimulation: false,
       layoutAlgorithm: {
         splitSeries: false,
@@ -87,60 +165,16 @@ const defaultChartOptions: Highcharts.Options = {
         style: {
           color: 'black',
           textOutline: 'none',
-          fontWeight: 'normal'
+          fontWeight: 'normal',
+          fontSize: 'auto',
         }
       }
     }
   },
+  legend: {
+    title: {
+      text: 'Importance',
+    }
+  },
   series: dummyBubbles,
 };
-
-export default function BubbleChart(props: HighchartsReact.Props){
-  const themeMode = useThemeContext()?.themeMode;
-  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const [ chartOptions, setChartOptions] = useState(defaultChartOptions);
-  const [ height, setHeight ] = useState<number>();
-
-  useEffect(()=>{
-    console.log("useEffect bubble chart theme");
-    themeMode === "dark" ? HighchartsDarkTheme(Highcharts) : HighchartsLightTheme(Highcharts);
-  },[themeMode])
-
-  useEffect(()=>{
-    console.log("useEffect bubbleChart update options");
-    setChartOptions((prev)=>{
-      return{...prev,
-        chart: {
-          height: height,
-        }
-      }
-    })
-  },[height])
-
-  return(
-    <View style={styles.canvas} onLayout={(layout)=>{
-      const { height } = layout.nativeEvent.layout
-      setHeight(height);
-    }}>
-      <View style={styles.chartArea}>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={chartOptions}
-          ref={chartComponentRef}
-          {...props}
-          />
-      </View>
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
-  canvas: {
-    flex: 1,
-    border: "solid 1px green",
-  },
-  chartArea: {
-    padding: 0,
-    border: "solid 1px yellow"
-  }
-});

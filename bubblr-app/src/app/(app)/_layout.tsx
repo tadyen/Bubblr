@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer"
 import ThemedDrawer from "../../components/themed-common/ThemedDrawer"
+import ThemedView from "../../components/themed-common/ThemedView";
 import DarkModeSwitch from "../../components/DarkModeSwitch";
 import SignOut from "../../components/SignOut"
 
