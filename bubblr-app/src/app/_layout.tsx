@@ -1,7 +1,7 @@
-import { Stack } from "expo-router";
-import { AuthContextProvider } from '../context/auth-context';
+import { AuthContextProvider } from "../context/auth-context"
 import { ThemeContextProvider, useThemeContext } from "../context/theme-context";
 import { ThemeProvider } from '@rneui/themed';
+import ThemedStack from "../components/themed-common/ThemedStack";
 
 export default function Layout(){
 
@@ -9,17 +9,7 @@ export default function Layout(){
     const {theme} = useThemeContext();
     return (
       <ThemeProvider theme={theme}>
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#111111',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-        />
+        <ThemedStack screenOptions={{headerShown: false}}/>
       </ThemeProvider>
     )
   }

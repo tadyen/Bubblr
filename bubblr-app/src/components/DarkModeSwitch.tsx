@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { Switch } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Icon, Switch } from "@rneui/themed";
 import { useThemeContext } from "../context/theme-context";
 
-export default function DarkModeSwitch(){
+
+export default function DarkModeSwitch(props: any){
   const themeProvider = useThemeContext();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
@@ -16,11 +18,31 @@ export default function DarkModeSwitch(){
   },[themeProvider]);
 
   return(
-    <Switch
-      onValueChange={()=>{handleToggle()}}
-      value={isDarkMode}
-    />
+    <View style={styles.container}>
+      <View style={styles.switch}>
+        {
+          isDarkMode
+            ? <Icon name='moon' type='ionicon'/>
+            : <Icon name='sunny' type='ionicon'/>
+        }
+        <Switch
+          onValueChange={()=>{handleToggle()}}
+          value={isDarkMode}
+        />
+      </View>
+    </View>
   )
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    padding: 12,
+  },
+  switch: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 10,
+  }
+});
