@@ -86,29 +86,29 @@ const dummyBubbles = [
     name: "Ignorable",
     data: [
       {name: 'Stay alive', value: 1**2},
-      {name: 'aa1', value: 4**2},
-      {name: 'aa2', value: 8**2},
-      {name: 'aa3', value: 10**2},
+      {name: 'Trim the hedge', value: 4**2},
+      {name: 'Get a new shelf', value: 8**2},
+      {name: 'Buy a new phone', value: 10**2},
     ]
   },
   {
     name: "Low",
     data: [
-      {name: 'asdf1', value: 11**2},
-      {name: 'asdf2', value: 12**2},
-      {name: 'asdf2', value: 12**2},
-      {name: 'asdf3', value: 15**2},
-      {name: 'asdf4', value: 16**2},
-      {name: 'asdf4', value: 20**2},
+      {name: 'Watch new season of ...', value: 11**2},
+      {name: 'Play <new game>', value: 12**2},
+      {name: 'Level a new character in <game>', value: 12**2},
+      {name: 'Pick up a new hobby', value: 15**2},
+      {name: 'Fix the leaking faucet', value: 16**2},
+      {name: 'Change that lightbulb', value: 20**2},
     ]
   },
   {
     name: "Average",
     data: [
-      {name: 'asdf5', value: 20**2},
-      {name: 'asdf6', value: 21**2},
-      {name: 'asdf6', value: 29**2},
-      {name: 'asdf6', value: 30**2},
+      {name: 'Get sleep', value: 20**2},
+      {name: 'Try new coffee place', value: 21**2},
+      {name: 'Explore new area', value: 29**2},
+      {name: 'Read a book', value: 30**2},
     ]
   },
   {
@@ -123,7 +123,7 @@ const dummyBubbles = [
     name: "Super",
     data: [
       {name: 'Finish off the asignment', value: 40**2},
-      {name: 'Touch Grass', value: 45**2},
+      {name: 'Stay Hydrated', value: 45**2},
       {name: 'Take the dog out for a walk', value: 50**2},
     ]
   }
