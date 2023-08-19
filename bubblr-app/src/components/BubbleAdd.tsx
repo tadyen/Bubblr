@@ -1,11 +1,16 @@
 import { useCallback, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { FAB, Overlay, Text, Input, AirbnbRating, Button, Icon } from "@rneui/themed";
+import { bubbleController, BubbleData } from "../controllers/bubbleController";
+import { useAuthContext } from "../context/auth-context";
+import { bubbleImportances } from "../lib/config";
 
 export default function BubbleAdd(){
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState<string>();
-  const [importance, setImportance] = useState<number>();
+  const [title, setTitle] = useState<string>('');
+  const [importance, setImportance] = useState<number>(-1);
+
+  const session = useAuthContext()?.session;
 
   const toggleOpen = useCallback(()=>{
     setOpen((v)=>!v);
@@ -16,12 +21,21 @@ export default function BubbleAdd(){
     console.log("Rating : " + `${rating}`);
   },[])
 
-  const handleSubmit = useCallback(()=>{
-    console.log("Submit clicked")
+  const handleSubmit = ()=>{
+    if( !session ) return
+    const data: BubbleData = {
+      user_id: session.user.id,
+      name: title,
+      size: bubbleImportances[importance].minSize,
+      importance: importance,
+    }
+    if( !bubbleController("POST", data) ){
+      console.log("Failed to submit data...");
+    };
     setTitle('');
-    setImportance(2);
+    setImportance(3);
     toggleOpen();
-  },[])
+  }
 
   return(
     <>
@@ -46,6 +60,7 @@ export default function BubbleAdd(){
           <Text>Task importance</Text>
           <AirbnbRating
             onFinishRating={ratingCompleted}
+            defaultRating={importance}
             starImage="https://img.icons8.com/?size=512&id=31649&format=png"
             reviews={["Ignorable", "Low", "Average", "High", "Super"]}
           />
