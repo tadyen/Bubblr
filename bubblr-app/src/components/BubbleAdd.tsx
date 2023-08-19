@@ -29,7 +29,7 @@ export default function BubbleAdd(){
       size: bubbleImportances[importance].minSize,
       importance: importance,
     }
-    if( !bubbleController("POST", data) ){
+    if( !bubbleController.POST(session.user.id, data) ){
       console.log("Failed to submit data...");
     };
     setTitle('');

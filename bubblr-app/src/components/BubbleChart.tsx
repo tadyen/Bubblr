@@ -6,7 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsLightTheme from "highcharts/themes/grid";
 import HighchartsDarkTheme from "highcharts/themes/grid-light";
 import { useThemeContext } from "../context/theme-context";
-import BubbleButtons from "./BubbleOptions";
+import { useAuthContext } from "../context/auth-context";
 
 // module init
 if (typeof Highcharts === 'object'){
@@ -15,6 +15,7 @@ if (typeof Highcharts === 'object'){
 
 export default function BubbleChart(props: HighchartsReact.Props){
   const {themeMode} = useThemeContext();
+  const { session } = useAuthContext();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const [ chartOptions, setChartOptions] = useState(defaultChartOptions);
   const [ height, setHeight ] = useState<number>();
