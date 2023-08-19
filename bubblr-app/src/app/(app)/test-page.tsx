@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 import { Text } from "@rneui/themed";
 import ThemedView from "../../components/themed-common/ThemedView";
 import BubbleButtons from "../../components/BubbleOptions";
-import BubbleAdd from "../../components/BubbleAdd";
+import BubbleAdd from "../../bubbleChart/BubbleAdd";
 
 export default function TestPage(){
   return(

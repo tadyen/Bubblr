@@ -6,14 +6,14 @@ import { useThemeContext } from "../context/theme-context";
 
 
 
-export default function BubbleOptions(){
+export default function BubbleLongPress(){
   const { theme, themeMode } = useThemeContext();
   const [visible, setVisible] = useState(false);
 
   return(
     <View style={styles.container}>
       <Button
-        title="Add"
+        title="Modify"
       />
       <Button
         title="Del"

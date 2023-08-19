@@ -4,7 +4,7 @@ import { View, StyleSheet, Modal } from "react-native";
 import { FAB, Overlay, Text, Input, AirbnbRating, Button, Icon } from "@rneui/themed";
 import { bubbleController, BubbleData } from "../controllers/bubbleController";
 import { useAuthContext } from "../context/auth-context";
-import { bubbleImportances } from "../lib/config";
+import { bubbleImportances } from "./config";
 
 export default function BubbleAdd(){
   const [open, setOpen] = useState(false);

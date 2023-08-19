@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import { bubbleImportances } from "../lib/config";
+import { bubbleImportances } from "../bubbleChart/config";
 
 const bubblesTable = "bubbles";
 

@@ -5,8 +5,8 @@ import { Text } from '@rneui/themed';
 import { useAuthContext } from '../../context/auth-context'
 import { useThemeContext } from '../../context/theme-context'
 import ThemedView from '../../components/themed-common/ThemedView';
-import BubbleChart from '../../components/BubbleChart';
-import BubbleAdd from '../../components/BubbleAdd';
+import BubbleChart from '../../bubbleChart/BubbleChart';
+import BubbleAdd from '../../bubbleChart/BubbleAdd';
 
 export default function App() {
   const session = useAuthContext()?.session;

@@ -9,7 +9,7 @@ import HighchartsDarkTheme from "highcharts/themes/grid-light";
 import { useThemeContext } from "../context/theme-context";
 import { useAuthContext } from "../context/auth-context";
 import { bubbleController, BubbleData } from "../controllers/bubbleController";
-import { bubbleImportances } from "../lib/config";
+import { bubbleImportances } from "./config";
 import { create } from "domain";
 
 // module init
@@ -29,15 +29,21 @@ export default function BubbleChart(props: HighchartsReact.Props){
   const {themeMode} = useThemeContext();
   const { session } = useAuthContext();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const [ chartOptions, setChartOptions] = useState<Highcharts.Options>();
   const [ height, setHeight ] = useState<number>();
-  const [ data, setData ] = useState<Required<BubbleData>[]>();
   const [ updatingData, setUpdatingData ] = useState(false);
+  const [ updatingChart, setUpdatingChart] = useState(false);
+
+  // undefined for loading, null for none
+  const [ chartOptions, setChartOptions] = useState<Highcharts.Options | undefined>(undefined);
+  const [ bubblesData, setBubblesData ] = useState<Required<BubbleData>[] | undefined | null>(undefined);
 
   // Init stuff
   useEffect(()=>{
-    setChartOptions(defaultChartOptions);
+    setUpdatingChart(true);
     HighchartsDarkTheme(Highcharts);
+    if(!chartOptions) setChartOptions(defaultChartOptions);
+    if(!bubblesData) setBubblesData(null);
+    setUpdatingChart(false);
   },[])
 
   // update chart theme
@@ -47,26 +53,31 @@ export default function BubbleChart(props: HighchartsReact.Props){
 
   // update height of chart to fit bounding view
   useEffect(()=>{
-    setChartOptions((prev)=>{
-      return({
-        ...prev,
-        chart: {
-          height: height,
-        }
-      })
+    if(!chartOptions) return
+    setUpdatingChart(true);
+    setChartOptions({
+      ...chartOptions,
+      chart: {
+        height: height,
+      }
     })
+    setUpdatingChart(false);
   },[height])
 
   // update chart with new data
   useEffect(()=>{
-    const series = data as Highcharts.Options["series"];
-    setChartOptions((prev)=>{
-      return({
-        ...prev,
-        series: series
-      })
+    if(bubblesData === undefined) return
+    if( !chartOptions ) return
+    setUpdatingChart(true);
+    const chartSeriesData = (bubblesData)
+      ? formatPlainToChartData(bubblesData) as Highcharts.Options["series"]
+      : dummyChartData as Highcharts.Options["series"]
+    setChartOptions({
+      ...chartOptions,
+      series: chartSeriesData,
     })
-  },[data])
+    setUpdatingChart(false);
+  },[bubblesData])
 
   return(
     <View style={styles.canvas} onLayout={(layout)=>{
@@ -181,11 +192,12 @@ const defaultChartOptions: Highcharts.Options = {
       text: 'Importance',
     }
   },
-  series: [],
+  series: undefined,
 };
 
 
-const dummyBubbles: ChartSeriesData = [
+
+const dummyChartData: ChartSeriesData = [
   {
     name: "Ignorable",
     data: [
@@ -199,8 +211,8 @@ const dummyBubbles: ChartSeriesData = [
     name: "Low",
     data: [
       {name: 'Watch new season of ...', value: 11**2},
-      {name: 'Play <new game>', value: 12**2},
-      {name: 'Level a new character in <game>', value: 12**2},
+      {name: 'Play something', value: 12**2},
+      {name: 'Level a new character', value: 12**2},
       {name: 'Pick up a new hobby', value: 15**2},
       {name: 'Fix the leaking faucet', value: 16**2},
       {name: 'Change that lightbulb', value: 20**2},
@@ -218,17 +230,18 @@ const dummyBubbles: ChartSeriesData = [
   {
     name: "High",
     data: [
-      {name: 'Have a break', value: 30**2},
-      {name: 'Have a KitKat', value: 35**2},
-      {name: 'Chill out and relax', value: 40**2},
+      {name: 'These are', value: 30**2},
+      {name: 'Simply some', value: 35**2},
+      {name: 'Example Bubbles', value: 40**2},
     ]
   },
   {
     name: "Super",
     data: [
-      {name: 'Finish off the asignment', value: 40**2},
-      {name: 'Stay Hydrated', value: 45**2},
-      {name: 'Take the dog out for a walk', value: 50**2},
+      {name: 'Try adding a new Bubble!', value: 50**2},
+      {name: 'Click the + at the bottom-right to get started', value: 47**2},
+      {name: 'Bubbles represent tasks according to their priority', value: 44**2},
+      {name: 'They grow over time if you dont handle them!', value: 40**2},
     ]
   }
 ];
