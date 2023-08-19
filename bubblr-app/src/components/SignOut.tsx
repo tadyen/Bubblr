@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { supabase } from '../lib/supabase';
 import { Text, Button } from "@rneui/themed";
 import { StyleSheet, View } from 'react-native';

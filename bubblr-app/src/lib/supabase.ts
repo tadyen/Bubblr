@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto';
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { createClient } from '@supabase/supabase-js'
 import Constants from "expo-constants"

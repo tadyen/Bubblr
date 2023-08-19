@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import 'react-native-url-polyfill/auto'
+import { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, Modal } from "react-native";
 import { FAB, Overlay, Text, Input, AirbnbRating, Button, Icon } from "@rneui/themed";
 import { bubbleController, BubbleData } from "../controllers/bubbleController";
 import { useAuthContext } from "../context/auth-context";
@@ -23,13 +24,13 @@ export default function BubbleAdd(){
 
   const handleSubmit = ()=>{
     if( !session ) return
-    const data: BubbleData = {
+    const newData: BubbleData = {
       user_id: session.user.id,
       name: title,
       size: bubbleImportances[importance].minSize,
       importance: importance,
     }
-    if( !bubbleController.POST(session.user.id, data) ){
+    if( !bubbleController.POST(session.user.id, newData) ){
       console.log("Failed to submit data...");
     };
     setTitle('');
@@ -46,7 +47,12 @@ export default function BubbleAdd(){
         placement="right"
         onPress={toggleOpen}
         />
-      <Overlay isVisible={open} onBackdropPress={toggleOpen} overlayStyle={styles.overlay}>
+      <Overlay
+        isVisible={open}
+        onBackdropPress={toggleOpen}
+        overlayStyle={styles.overlay}
+        ModalComponent={Modal}
+      >
         <View style={[styles.verticallySpaced, styles.mt20]}>
           <Input
             label="New Task"

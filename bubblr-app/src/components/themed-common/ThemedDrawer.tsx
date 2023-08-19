@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { Drawer } from "expo-router/drawer"
 import { StyleSheet } from 'react-native';
 import { useThemeContext } from "../../context/theme-context";

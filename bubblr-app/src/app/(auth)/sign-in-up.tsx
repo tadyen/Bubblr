@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import React, { useState } from 'react'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input, Text, Icon } from '@rneui/themed'

@@ -5,10 +5,11 @@ const bubblesTable = "bubbles";
 
 // Ideally get this from the d.ts exports of supabase itself
 export type BubbleData = {
-  user_id: string
+  id?: string,
+  user_id: string,
   name: string,
-  size: number
-  importance: number
+  size: number,
+  importance: number,
 }
 
 function validateData(data: BubbleData | undefined){

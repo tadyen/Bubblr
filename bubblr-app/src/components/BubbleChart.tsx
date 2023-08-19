@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Highcharts from "highcharts";
@@ -7,40 +8,65 @@ import HighchartsLightTheme from "highcharts/themes/grid";
 import HighchartsDarkTheme from "highcharts/themes/grid-light";
 import { useThemeContext } from "../context/theme-context";
 import { useAuthContext } from "../context/auth-context";
+import { bubbleController, BubbleData } from "../controllers/bubbleController";
+import { bubbleImportances } from "../lib/config";
+import { create } from "domain";
 
 // module init
 if (typeof Highcharts === 'object'){
   HighchartsMore(Highcharts);
 }
 
+type ChartSeriesData = {
+  name: string,
+  data: {
+    name: string,
+    value: number,
+  }[]
+}[]
+
 export default function BubbleChart(props: HighchartsReact.Props){
   const {themeMode} = useThemeContext();
   const { session } = useAuthContext();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const [ chartOptions, setChartOptions] = useState(defaultChartOptions);
+  const [ chartOptions, setChartOptions] = useState<Highcharts.Options>();
   const [ height, setHeight ] = useState<number>();
+  const [ data, setData ] = useState<Required<BubbleData>[]>();
+  const [ updatingData, setUpdatingData ] = useState(false);
 
+  // Init stuff
   useEffect(()=>{
-    console.log("useEffect bubble chart theme init");
+    setChartOptions(defaultChartOptions);
     HighchartsDarkTheme(Highcharts);
   },[])
 
+  // update chart theme
   useEffect(()=>{
-    console.log("useEffect bubble chart theme");
     themeMode === "dark" ? HighchartsDarkTheme(Highcharts) : HighchartsLightTheme(Highcharts);
   },[themeMode])
 
+  // update height of chart to fit bounding view
   useEffect(()=>{
-    console.log("useEffect bubbleChart update options");
     setChartOptions((prev)=>{
-      return{...prev,
+      return({
+        ...prev,
         chart: {
           height: height,
         }
-      }
+      })
     })
   },[height])
 
+  // update chart with new data
+  useEffect(()=>{
+    const series = data as Highcharts.Options["series"];
+    setChartOptions((prev)=>{
+      return({
+        ...prev,
+        series: series
+      })
+    })
+  },[data])
 
   return(
     <View style={styles.canvas} onLayout={(layout)=>{
@@ -82,54 +108,32 @@ const styles = StyleSheet.create({
   }
 });
 
-const dummyBubbles = [
-  {
-    name: "Ignorable",
-    data: [
-      {name: 'Stay alive', value: 1**2},
-      {name: 'Trim the hedge', value: 4**2},
-      {name: 'Get a new shelf', value: 8**2},
-      {name: 'Buy a new phone', value: 10**2},
-    ]
-  },
-  {
-    name: "Low",
-    data: [
-      {name: 'Watch new season of ...', value: 11**2},
-      {name: 'Play <new game>', value: 12**2},
-      {name: 'Level a new character in <game>', value: 12**2},
-      {name: 'Pick up a new hobby', value: 15**2},
-      {name: 'Fix the leaking faucet', value: 16**2},
-      {name: 'Change that lightbulb', value: 20**2},
-    ]
-  },
-  {
-    name: "Average",
-    data: [
-      {name: 'Get sleep', value: 20**2},
-      {name: 'Try new coffee place', value: 21**2},
-      {name: 'Explore new area', value: 29**2},
-      {name: 'Read a book', value: 30**2},
-    ]
-  },
-  {
-    name: "High",
-    data: [
-      {name: 'Have a break', value: 30**2},
-      {name: 'Have a KitKat', value: 35**2},
-      {name: 'Chill out and relax', value: 40**2},
-    ]
-  },
-  {
-    name: "Super",
-    data: [
-      {name: 'Finish off the asignment', value: 40**2},
-      {name: 'Stay Hydrated', value: 45**2},
-      {name: 'Take the dog out for a walk', value: 50**2},
-    ]
-  }
-] as Highcharts.Options["series"];
+function formatPlainToChartData(plain: BubbleData[]){
+  const chartData = [] as ChartSeriesData;
 
+  // Create series placeholders for each level of importance
+  let startIndex = 1; // to determine if key starts at 1 or 0
+  Object.values(bubbleImportances).forEach((importance)=>{
+    const { key, flavourText, minSize, maxSize} = importance;
+    const series: ChartSeriesData[0] = {
+      name: flavourText,
+      data: []
+    }
+    if(startIndex !== 0 && key === 0){ startIndex = 0 }
+    chartData.push(series);
+  })
+
+  // Scan each data and allocate accordingly
+  const dataToChartValue = (sub: BubbleData) => ({
+    name: sub.name,
+    value: sub.size ** 2,
+  })
+  plain.forEach((data: BubbleData)=>{
+    const { name, size, importance } = data;
+    chartData[importance - startIndex].data.push( dataToChartValue(data) );
+  })
+  return chartData;
+}
 
 const defaultChartOptions: Highcharts.Options = {
   title: {
@@ -177,5 +181,54 @@ const defaultChartOptions: Highcharts.Options = {
       text: 'Importance',
     }
   },
-  series: dummyBubbles,
+  series: [],
 };
+
+
+const dummyBubbles: ChartSeriesData = [
+  {
+    name: "Ignorable",
+    data: [
+      {name: 'Stay alive', value: 1**2},
+      {name: 'Trim the hedge', value: 4**2},
+      {name: 'Get a new shelf', value: 8**2},
+      {name: 'Buy a new phone', value: 10**2},
+    ]
+  },
+  {
+    name: "Low",
+    data: [
+      {name: 'Watch new season of ...', value: 11**2},
+      {name: 'Play <new game>', value: 12**2},
+      {name: 'Level a new character in <game>', value: 12**2},
+      {name: 'Pick up a new hobby', value: 15**2},
+      {name: 'Fix the leaking faucet', value: 16**2},
+      {name: 'Change that lightbulb', value: 20**2},
+    ]
+  },
+  {
+    name: "Average",
+    data: [
+      {name: 'Get sleep', value: 20**2},
+      {name: 'Try new coffee place', value: 21**2},
+      {name: 'Explore new area', value: 29**2},
+      {name: 'Read a book', value: 30**2},
+    ]
+  },
+  {
+    name: "High",
+    data: [
+      {name: 'Have a break', value: 30**2},
+      {name: 'Have a KitKat', value: 35**2},
+      {name: 'Chill out and relax', value: 40**2},
+    ]
+  },
+  {
+    name: "Super",
+    data: [
+      {name: 'Finish off the asignment', value: 40**2},
+      {name: 'Stay Hydrated', value: 45**2},
+      {name: 'Take the dog out for a walk', value: 50**2},
+    ]
+  }
+];

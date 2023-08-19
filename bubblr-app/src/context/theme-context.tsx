@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { useState, createContext, ReactNode, useContext, useCallback, useEffect, useMemo } from "react";
 import { createTheme, useTheme, useThemeMode, ThemeProvider, lightColors, darkColors } from "@rneui/themed";
 import { Platform } from "react-native";

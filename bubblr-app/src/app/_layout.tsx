@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { AuthContextProvider } from "../context/auth-context"
 import { ThemeContextProvider, useThemeContext } from "../context/theme-context";
 import { ThemeProvider } from '@rneui/themed';

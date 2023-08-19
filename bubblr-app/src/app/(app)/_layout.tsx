@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { View } from "react-native";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer"
 import ThemedDrawer from "../../components/themed-common/ThemedDrawer"

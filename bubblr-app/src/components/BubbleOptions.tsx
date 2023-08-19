@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { useState } from "react";
 import { View, StyleSheet, Modal, Button } from "react-native";
 import { Icon } from "@rneui/themed";

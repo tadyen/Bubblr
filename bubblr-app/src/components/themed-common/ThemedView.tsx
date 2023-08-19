@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { View, ViewProps } from "react-native"
 import { useThemeContext } from "../../context/theme-context";
 

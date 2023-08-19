@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import { AuthSession } from "@supabase/supabase-js";
 import { useState, useEffect, createContext, useMemo, ReactNode, useContext } from "react"

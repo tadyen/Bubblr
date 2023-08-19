@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'
 import { View, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
 import { Text } from "@rneui/themed";
