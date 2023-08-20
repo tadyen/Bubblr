@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto'
 import { useCallback, useEffect, useState } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import { FAB, Overlay, Text, Input, AirbnbRating, Button, Icon } from "@rneui/themed";
-import { bubbleController, BubbleData } from "../controllers/bubbleController";
+import { bubbleController, BubbleData } from "./bubbleController";
 import { useAuthContext } from "../context/auth-context";
 import { bubbleImportances } from "./config";
 

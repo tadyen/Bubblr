@@ -1,12 +1,6 @@
-import { supabase, supabaseConfig } from "../../src/lib/supabase"
-console.log(supabaseConfig)
+import { supabase } from "../../src/lib/supabase"
+
 describe("Testing supabase lib helper ", ()=>{
-  test('Smoke: Has config',()=>{
-    expect(supabaseConfig).toBeDefined();
-    expect(supabaseConfig).toHaveProperty('url');
-    expect(supabaseConfig).toHaveProperty('schema');
-    expect(supabaseConfig).toHaveProperty('publicKey');
-  });
   test('Has connection object', ()=>{
     expect(supabase).toBeDefined()
   });

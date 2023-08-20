@@ -18,6 +18,21 @@ const defaultTheme = createTheme({
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeContextProvider({children}:{children: ReactNode}){
+  function _Inner(){
+    const {theme} = useThemeContext();
+    return (
+      <ThemeProvider theme={theme}>
+        {children}
+      </ThemeProvider>
+    )
+  }
+  return (
+    <_ThemeProvider>
+      <_Inner />
+    </_ThemeProvider>
+  )
+}
+function _ThemeProvider({children}:{children: ReactNode}){
   const [themeMode, setThemeMode] = useState<ThemeModes>("dark");
   const [theme, _] = useState<Theme>(defaultTheme);
 

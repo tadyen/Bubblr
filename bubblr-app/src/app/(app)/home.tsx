@@ -4,27 +4,26 @@ import { Stack } from 'expo-router'
 import { Text } from '@rneui/themed';
 import { useAuthContext } from '../../context/auth-context'
 import { useThemeContext } from '../../context/theme-context'
-import ThemedView from '../../components/themed-common/ThemedView';
 import BubbleChart from '../../bubbleChart/BubbleChart';
 import BubbleAdd from '../../bubbleChart/BubbleAdd';
+import ThemedScreen from "../../components/themed-common/ThemedScreen";
 
-export default function App() {
+export default function Home() {
   const session = useAuthContext()?.session;
   const {themeMode} = useThemeContext();
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedScreen style={styles.container}>
       <Stack.Screen
         options={{
           title: "Home",
         }}
-      />
-      <BubbleChart />
-      <BubbleAdd />
-    </ThemedView>
+        />
+      {/* <BubbleChart /> */}
+      {/* <BubbleAdd /> */}
+    </ThemedScreen>
   )
 }
-
 
 const styles = StyleSheet.create({
   container: {

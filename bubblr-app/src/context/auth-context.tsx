@@ -54,18 +54,18 @@ export function AuthContextProvider({ children }: { children: ReactNode }){
     };
   },[]);
 
-  // hook to protect route access based on user authentication
-  const segments = useSegments();
-  useEffect(()=>{
-    console.log("useefect auth segments");
-    // allow only routes in /app/(auth)/*
-    const inAuthGroup = segments[0] === '(auth)';
-    if( !session && !inAuthGroup ){
-      router.replace('/sign-in-up');
-    }else if ( session !== null && inAuthGroup ){
-      router.replace('/');
-    }
-  },[session, segments])
+  // // hook to protect route access based on user authentication
+  // const segments = useSegments();
+  // useEffect(()=>{
+  //   console.log("useefect auth segments");
+  //   // allow only routes in /app/(auth)/*
+  //   const inAuthGroup = segments[0] === '(auth)';
+  //   if( !session && !inAuthGroup ){
+  //     router.replace('/sign-in-up');
+  //   }else if ( session !== null && inAuthGroup ){
+  //     router.replace('/home');
+  //   }
+  // },[session])
 
   const value = useMemo(()=>{
     console.log("usememo auth");

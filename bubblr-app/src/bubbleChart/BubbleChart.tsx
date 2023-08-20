@@ -8,7 +8,7 @@ import HighchartsLightTheme from "highcharts/themes/grid";
 import HighchartsDarkTheme from "highcharts/themes/grid-light";
 import { useThemeContext } from "../context/theme-context";
 import { useAuthContext } from "../context/auth-context";
-import { bubbleController, BubbleData } from "../controllers/bubbleController";
+import { bubbleController, BubbleData } from "./bubbleController";
 import { bubbleImportances } from "./config";
 import { create } from "domain";
 

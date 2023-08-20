@@ -1,8 +1,9 @@
 import 'react-native-url-polyfill/auto'
-import { View, ViewProps } from "react-native"
+import { ViewProps } from "react-native"
 import { useThemeContext } from "../../context/theme-context";
+import { Screen, ScreenProps } from 'react-native-screens';
 
-export default function ThemedView(props: ViewProps){
+export default function ThemedScreen(props: ViewProps){
   const { theme } = useThemeContext();
 
   const colourScheme = theme.mode === "dark"
@@ -19,8 +20,8 @@ export default function ThemedView(props: ViewProps){
     backgroundColor: backgroundColor
   }]
   return(
-    <View {...props} style={style}>
+    <Screen {...props} style={style}>
       {props?.children}
-    </View>
+    </Screen>
   )
 }

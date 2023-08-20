@@ -2,8 +2,9 @@ import 'react-native-url-polyfill/auto'
 import React, { useState } from 'react'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input, Text, Icon } from '@rneui/themed'
-import ThemedView from '../../components/themed-common/ThemedView'
 import { supabase } from '../../lib/supabase'
+import { Stack } from "expo-router";
+import ThemedScreen from '../../components/themed-common/ThemedScreen'
 
 export default function SignInUp(){
   const [email, setEmail] = useState('')
@@ -47,7 +48,12 @@ export default function SignInUp(){
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedScreen style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "Login",
+        }}
+      />
       <Text>Please Login or Sign-Up to continue</Text>
       <Text style={styles.errorMsg}>{ isError && "Invalid input combination"}</Text>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -77,7 +83,7 @@ export default function SignInUp(){
       <View style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
       </View>
-    </ThemedView>
+    </ThemedScreen>
   )
 }
 
